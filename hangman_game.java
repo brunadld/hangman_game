@@ -141,7 +141,7 @@ public class hangman_game {
     }
 
     public static void printDisplay(String word, int n, String letters) {
-        System.out.println("\nERRORS: "+n+"\tWRONG GUESSES: "+letters+"\n");
+        System.out.println("\nERRORS: "+n+"\tWRONG GUESSES:"+letters+"\n");
         drawHangman(n);
         
         for(int i = 0; i < word.length(); i++) {
@@ -179,7 +179,7 @@ public class hangman_game {
             }
         }
 
-        letters += input + " ";
+        letters += " " + input;
         return letters;
     }
     
