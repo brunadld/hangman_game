@@ -5,10 +5,8 @@ public class hangman_game {
         for(int i = 0; i < 7; i++) {
             for(int j = 0; j < 5; j++) {
                 switch(i) {
-                    case 0:
-                        System.out.print("__");
-                        break;
-                    case 1:
+                    case 0 -> System.out.print("__");
+                    case 1 -> {
                         switch(j) {
                             case 0 -> System.out.print("|");
                             case 1 -> System.out.print("\t");
@@ -16,8 +14,8 @@ public class hangman_game {
                             case 3 -> System.out.print("|");
                             case 4 -> System.out.print(" ");
                         }
-                        break;
-                    case 2:
+                    }
+                    case 2 -> {
                         switch(j) {
                             case 0 -> System.out.print("|");
                             case 1 -> System.out.print("\t");
@@ -32,8 +30,8 @@ public class hangman_game {
                             }
                             case 4 -> System.out.print(" ");
                         }
-                        break;
-                    case 3:
+                    }
+                    case 3 -> {
                         switch(j) {
                             case 0 -> System.out.print("|");
                             case 1 -> System.out.print("\t");
@@ -62,8 +60,8 @@ public class hangman_game {
                                 }
                             }
                         }
-                        break;
-                    case 4:
+                    }
+                    case 4 -> {
                         switch(j) {
                             case 0 -> System.out.print("|");
                             case 1 -> System.out.print("\t");
@@ -85,17 +83,17 @@ public class hangman_game {
                                 }
                             }
                         }
-                        break;
-                    case 5:
+                    }
+                    case 5 -> {
                         if(j == 0) {
                             System.out.print("|");
                         }
                         else {
                             System.out.print("___");
                         }
-                        break;
-                    default:
-                        break;    
+                    }
+                    default -> {
+                    }    
                     }
                 }
 
@@ -105,11 +103,12 @@ public class hangman_game {
             System.out.println();
     }
     
-    public static String chooseWord(int option) {
+    public static String chooseWord(int option, Scanner scan) {
         if(option == 2) {
-            Scanner scan = new Scanner(System.in);
+            scan.nextLine();
+
             System.out.println("Insert a word:");
-            return scan.nextLine();
+            return scan.nextLine().toLowerCase();
         }
         else if(option < 1 || option > 2) {
             System.out.println("Invalid command! A word will be selected randomly.");
@@ -191,45 +190,43 @@ public class hangman_game {
             }
         }
 
-        System.out.println("\nYOU WON! Answer:");
+        System.out.print("\nYOU WON! Answer: ");
 
         for(int i = 0; i < display.length(); i++) {
-            System.out.print(display.charAt(i)+" ");
+            System.out.print(display.toUpperCase().charAt(i));
         }
 
         return true;
     }
 
     public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
-
-        System.out.println("Choose an option:\n[1]\tRandomly chosen word");
-        System.out.println("[2]\tWord chosen by user input");
-
-        int option = scan.nextInt();
-        String answer = chooseWord(option);
-
-        int errors = 0;
-        String wrongLetters = "";
-
-        String display = fillDisplay(answer);
-
-        while(errors < 7 && !gameOver(answer, display)) {
-            printDisplay(display, errors, wrongLetters);
-    
-            System.out.print("Choose a letter: ");
-            String userInput = scan.next();
-            display = updateDisplay(userInput, answer, display);
-
-            errors = checkAnswer(errors, userInput, answer);
-            wrongLetters = updateMistakes(userInput, wrongLetters, answer);         
+        try (Scanner scan = new Scanner(System.in)) {
+            System.out.println("Choose an option:\n[1]\tRandomly chosen word");
+            System.out.println("[2]\tWord chosen by user input");
+            
+            int option = scan.nextInt();
+            String answer = chooseWord(option, scan);
+            
+            int errors = 0;
+            String wrongLetters = "";
+            
+            String display = fillDisplay(answer);
+            
+            while(errors < 7 && !gameOver(answer, display)) {
+                printDisplay(display, errors, wrongLetters);
+                
+                System.out.print("Choose a letter: ");
+                String userInput = scan.next().toLowerCase();
+                display = updateDisplay(userInput, answer, display);
+                
+                errors = checkAnswer(errors, userInput, answer);
+                wrongLetters = updateMistakes(userInput, wrongLetters, answer);
+            }         
+            
+            if(errors == 7) {
+                printDisplay(display, errors, wrongLetters);
+                System.out.println("\nYOU LOST! Answer: "+answer.toUpperCase());
+            }
         }
-
-        if(errors == 7) {
-            printDisplay(display, errors, wrongLetters);
-            System.out.println("\nYOU LOST! Answer: "+answer);
-        }
-
-        scan.close();
     }
 }
